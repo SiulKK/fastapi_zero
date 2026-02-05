@@ -1,7 +1,13 @@
 from datetime import datetime
 
 from sqlalchemy import func, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_as_dataclass, mapped_column, registry, relationship
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_as_dataclass,
+    mapped_column,
+    registry,
+    relationship,
+)
 from enum import Enum
 
 table_registry = registry()
@@ -12,7 +18,8 @@ class TodoState(str, Enum):
     todo = 'todo'
     doing = 'doing'
     done = 'done'
-    trash = 'trash' 
+    trash = 'trash'
+
 
 @table_registry.mapped_as_dataclass
 class User:
@@ -37,6 +44,7 @@ class User:
         init=False, server_default=func.now(), onupdate=func.now()
     )
 
+
 @table_registry.mapped_as_dataclass
 class Todo:
     __tablename__ = 'todos'
@@ -47,4 +55,4 @@ class Todo:
     state: Mapped[TodoState]
 
     # Toda tarefa pertence a alguém
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))    
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))

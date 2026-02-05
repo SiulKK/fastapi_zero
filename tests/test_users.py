@@ -87,6 +87,7 @@ def test_delete_user(client, user, token):
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {'message': 'User deleted'}
 
+
 def test_update_user_with_wrong_user(client, other_user, token):
     response = client.put(
         f'/users/{other_user.id}',
@@ -99,5 +100,3 @@ def test_update_user_with_wrong_user(client, other_user, token):
     )
     assert response.status_code == HTTPStatus.FORBIDDEN
     assert response.json() == {'detail': 'Not enough permissions'}
-
-
