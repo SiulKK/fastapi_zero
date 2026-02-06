@@ -1,12 +1,26 @@
-From python:3.13
-ENV POETRY_VIRTUALENVS_CREATE=false
+FROM python:3.12-slim
 
-WORKDIR app/
+WORKDIR /app
+
+# dependências básicas do sistema
+RUN apt-get update \
+ && apt-get install -y build-essential curl \
+ && rm -rf /var/lib/apt/lists/*
+
+# instala uv
+RUN pip install --no-cache-dir uv
+
+# copia somente arquivos de dependência primeiro
+COPY pyproject.toml uv.lock ./
+
+# instala dependências (sem dev)
+RUN uv sync --frozen --no-dev
+
+# copia o resto do projeto
 COPY . .
 
-RUN pip install uv
-
-RUN uv sync --no-dev
+RUN chmod +x entrypoint.sh
 
 EXPOSE 8000
-CMD uv run uvicorn --host 0.0.0.0 fastapi_zero.app:app
+
+ENTRYPOINT ["./entrypoint.sh"]

@@ -1,7 +1,10 @@
 #!/bin/sh
+set -e
 
-# Executa as migrações do banco de dados
+echo "⏳ Rodando migrações..."
 uv run alembic upgrade head
 
-# Inicia a aplicação
-uv run uvicorn --host 0.0.0.0 --port 8000 fastapi_zero.app:app
+echo "🚀 Subindo API..."
+exec uv run uvicorn fastapi_zero.app:app \
+  --host 0.0.0.0 \
+  --port 8000
